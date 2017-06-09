@@ -20,7 +20,7 @@ $ python scan.py --image path/to/image
 Ensure that both the files are in same directory
 
 # Closing
-Note : The main idea nehind the code is from Pyimagesearch, I have edited the code at places (the original crashes due to updates in openCV version, python versions etc) and built upon pre existing code. No intent for commercial use, if you do use it be sure to cite Pyimagesearch and me accordingly.
+Note : The main idea behind the code is from Pyimagesearch (taking a course online rn), I have edited the code at places (the original crashes due to updates in openCV version, python versions etc) and built upon pre existing code. No intent for commercial use, if you do use it be sure to cite Pyimagesearch and me accordingly.
 
 
 :))
