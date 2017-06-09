@@ -59,7 +59,7 @@ for c in cnts:
 #print(len(screenCnt)) 
 # show the contour (outline) of the piece of paper
 print "STEP 2: Find contours of paper"
-if screenCnt == 0 : exit("Contours not found")
+#if screenCnt == 0 : exit("Contours not found")
 # cv2.drawContours(image, [screenCnt], -1, (0, 255, 0), 2)
 # cv2.imshow("Outline", image)
 # cv2.waitKey(0)
