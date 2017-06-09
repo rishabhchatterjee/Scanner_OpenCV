@@ -21,64 +21,38 @@ image = imutils.resize(image, height = 500)
 # convert the image to grayscale, blur it, and find edges
 # in the image
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-gray = cv2.GaussianBlur(gray, (5, 5), 0)
+gray = cv2.GaussianBlur(gray, (5, 5), 0)        # To make edge detection better
 edged = cv2.Canny(gray, 75, 200)
  
-# show the original image and the edge detected image
-print "STEP 1: Edge Detection"
-# cv2.imshow("Image", image)
-# cv2.imshow("Edged", edged)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
 
-# find the contours in the edged image, keeping only the
-# largest ones, and initialize the screen contour
 
-# THIS LINE IS CHANGED num args has increased due to version change
+# If you are using openCV version below 3, change the first argument to (cnts, _) . The findContours returns 2 args in openCV < 3.0
 (_,cnts, _) = cv2.findContours(edged.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 cnts = sorted(cnts, key = cv2.contourArea, reverse = True)[:5]
  
 # loop over the contours
 for c in cnts:
     # approximate the contour
-    peri = cv2.arcLength(c, True)
-    approx = cv2.approxPolyDP(c, 0.02 * peri, True)
+    perimeter = cv2.arcLength(c, True)
+    est = cv2.approxPolyDP(c, 0.02 * perimeter, True)
 
-    #print(len(approx))
- 
-    # if our approximated contour has four points, then we
-    # can assume that we have found our screen
-    
-    if len(approx) == 4:
-        screenCnt = approx
+    # ASSUMPTION : image has 4 vertices
+    if len(est) == 4:
+        screenCnt = est 
         break
     else :
         screenCnt = 0
 
 
-#print(len(screenCnt)) 
-# show the contour (outline) of the piece of paper
-print "STEP 2: Find contours of paper"
-#if screenCnt == 0 : exit("Contours not found")
-# cv2.drawContours(image, [screenCnt], -1, (0, 255, 0), 2)
-# cv2.imshow("Outline", image)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
-
-# apply the four point transform to obtain a top-down
-# view of the original image
-
-
-warped = four_point_transform(orig, screenCnt.reshape(4, 2) * ratio)
+newImg = four_point_transform(orig, screenCnt.reshape(4, 2) * ratio)
  
-# convert the warped image to grayscale, then threshold it
-# to give it that 'black and white' paper effect
-warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)
-warped = threshold_adaptive(warped, 251, offset = 10)
-warped = warped.astype("uint8") * 255
+
+newImg = cv2.cvtColor(newImg, cv2.COLOR_BGR2GRAY)
+newImg = threshold_adaptive(newImg, 251, offset = 10)
+newImg = newImg.astype("uint8") * 255
  
 # show the original and scanned images
-print "STEP 3: Apply perspective transform"
+
 cv2.imshow("Original", imutils.resize(orig, height = 650))
-cv2.imshow("Scanned", imutils.resize(warped, height = 650))
+cv2.imshow("Scanned", imutils.resize(newImg, height = 650))
 cv2.waitKey(0)
